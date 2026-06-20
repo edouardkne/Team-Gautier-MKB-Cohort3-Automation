@@ -25,7 +25,9 @@ Each member has a dedicated workspace where they implement automated test cases 
 ---
 
 # 📂 Project Structure
+
    Doc/
+   
      use-cases/
      UC-Login.md
      UC-CreateAccount.md
@@ -33,11 +35,13 @@ Each member has a dedicated workspace where they implement automated test cases 
      UC-ManageSurveys.md
      UC-ReviewFeedback.md
      users/
+     
         student.md
         instructor.md
         administrator.md
 
    Edouard/
+   
      UC-Login/
      UC-CreateAccount/
      UC-ProvideFeedback/
@@ -46,6 +50,7 @@ Each member has a dedicated workspace where they implement automated test cases 
      test-reports/
 
    Arnold/
+   
      UC-Login/
      UC-CreateAccount/
      UC-ProvideFeedback/
@@ -54,6 +59,7 @@ Each member has a dedicated workspace where they implement automated test cases 
      test-reports/
 
    Dieu-merci/
+   
      UC-Login/
      UC-CreateAccount/
      UC-ProvideFeedback/
