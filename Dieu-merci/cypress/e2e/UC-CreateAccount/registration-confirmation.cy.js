@@ -1,27 +1,31 @@
-describe('UC-CreateAccount / registration confirmation', () => {
-  const url = '/wp-login.php?checkemail=registered';
+describe("UC-CreateAccount / registration-confirmation", () => {
+  const confirmationUrl =
+    "https://student.michaelkentburns.com/wp-login.php?checkemail=registered";
 
-  beforeEach(() => {
-    cy.visit(url);
-  });
+  it("should display the registration confirmation page", () => {
+    cy.visit(confirmationUrl);
 
-  it('shows confirmation title and heading', () => {
-    cy.title().should('include', 'Check your email');
-    cy.get('.screen-reader-text').should('contain', 'Check your email');
-  });
+    cy.title().should("contain", "Check your email");
 
-  it('displays login message with correct content and link', () => {
-    cy.get('#login-message').should('be.visible')
-      .and('contain', 'Registration complete. Please check your email');
+    cy.get(".screen-reader-text")
+      .should("be.visible")
+      .and("contain.text", "Check your email");
 
-    cy.get('#login-message').find('a')
-      .should('have.attr', 'href', 'https://student.michaelkentburns.com/wp-login.php')
-      .and('contain', 'login page');
-  });
+    cy.get("#login-message")
+      .should("be.visible")
+      .and("contain.text", "Registration complete. Please check your email");
 
-  it('has back to blog link pointing to the site root', () => {
-    cy.get('#backtoblog').should('be.visible')
-      .find('a')
-      .should('have.attr', 'href', 'https://student.michaelkentburns.com/');
+    cy.get("#login-message a")
+      .should(
+        "have.attr",
+        "href",
+        "https://student.michaelkentburns.com/wp-login.php",
+      )
+      .and("contain.text", "login page");
+
+    cy.get("#backtoblog")
+      .should("be.visible")
+      .find("a")
+      .should("have.attr", "href", "https://student.michaelkentburns.com/");
   });
 });

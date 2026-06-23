@@ -2,43 +2,49 @@ describe("UC-CreateAccount / register-success", () => {
   const registrationUrl =
     "https://student.michaelkentburns.com/wp-login.php?action=register";
 
-  it("should submit registration form", () => {
-    const uniqueId = Date.now();
-    const username = `testuser_${uniqueId}`;
-    const email = `testuser_${uniqueId}@example.com`;
+  const generateUser = () => {
+    const id = Date.now();
+
+    return {
+      username: `testuser_${id}`,
+      email: `testuser_${id}@example.com`,
+    };
+  };
+
+  it("should successfully register a new user and redirect to confirmation page", () => {
+    const user = generateUser();
 
     cy.visit(registrationUrl);
 
+    // Registration form should be displayed
     cy.get("#registerform").should("be.visible");
 
-    cy.get("#user_login")
+    // Fill registration fields
+    cy.get("#user_login").should("be.visible").type(user.username);
+
+    cy.get("#user_email").should("be.visible").type(user.email);
+
+    // Submit registration
+    cy.get("#wp-submit")
       .should("be.visible")
-      .type(username);
+      .and("have.value", "Register")
+      .click();
 
-    cy.get("#user_email")
+    // Verify redirect
+    cy.url().should("include", "wp-login.php?checkemail=registered");
+
+    // Verify confirmation message
+    cy.get("#login-message")
       .should("be.visible")
-      .type(email);
+      .and("contain.text", "Registration complete. Please check your email");
 
-    cy.get("#wp-submit").click();
-
-    // 🔎 Validation UI WordPress (stable)
-    cy.get("body").should("be.visible");
-
-    cy.get("body").then(($body) => {
-      const text = $body.text();
-
-      const possibleStates = [
-        "Registration confirmation will be emailed to you.",
-        "Check your email",
-        "Registration complete",
-        "User registration is currently not allowed"
-      ];
-
-      const matched = possibleStates.some(state =>
-        text.includes(state)
-      );
-
-      expect(matched).to.eq(true);
-    });
+    // Verify login link
+    cy.get("#login-message a")
+      .should(
+        "have.attr",
+        "href",
+        "https://student.michaelkentburns.com/wp-login.php",
+      )
+      .and("contain.text", "login page");
   });
 });
