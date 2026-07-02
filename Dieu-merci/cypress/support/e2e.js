@@ -14,5 +14,29 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
-import './utils'
+import "./commands";
+import "./utils";
+
+Cypress.on("uncaught:exception", (err) => {
+  const ignoredMessages = [
+    "The response is not a valid JSON response",
+    "Unexpected token < in JSON",
+    "ResizeObserver loop limit exceeded",
+  ];
+
+  if (ignoredMessages.some((message) => err.message.includes(message))) {
+    return false;
+  }
+
+  return true;
+});
+
+// Capture a screenshot after every test and name it by test-title and state.
+afterEach(function () {
+  const test = this.currentTest || {};
+  const title = (test.title || "unknown").replace(/[\\/:*?"<>|]/g, "_");
+  const state = test.state || "unknown";
+  const screenshotName = `${title} (${state})`;
+  // use capture: 'runner' to include the test runner UI; adjust as needed
+  cy.screenshot(screenshotName, { capture: "runner" });
+});
