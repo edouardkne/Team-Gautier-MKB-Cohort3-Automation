@@ -48,10 +48,15 @@ describe("Provide Feedback", () => {
       .click();
 
     // should response for all questions
-    cy.get('[name="answer[348]"]').should("be.visible").clear().type("Yes");
+    cy.get('[name="answer[348]"]').should("be.visible").clear().type("Front-end web development is the creation of user interfaces.");
 
-    cy.get('[name="answer[349]"]').should("be.visible").clear().type("Yes Al");
+    cy.get('[name="answer[349]"]').should("be.visible").clear().type("Because web development requires different skills, and teamwork helps complete projects successfully.");
 
-    cy.get('[name="answer[350]"]').should("be.visible").clear().type("Yes All");
+    cy.get('[name="answer[350]"]').should("be.visible").clear().type("A computer, internet access, a web browser, a text editor, and source management tools.");
+
+    cy.get('#submit-btn').should("be.visible").click();
+
+    // Verify that the feedback submission was successful.
+    cy.contains("Thank you for your feedback!", { timeout: 10000 }).should("be.visible");
   });
 });
