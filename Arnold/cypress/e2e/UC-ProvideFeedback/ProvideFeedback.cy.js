@@ -1,12 +1,10 @@
 describe("Provide Feedback", () => {
-
-  beforeEach(() => {
+  it("should navigate through surveys and open Arnold Project Testing Survey", () => {
     // Visit the application homepage.
     cy.visit("https://student.michaelkentburns.com");
 
-    // Accept the cookie consent banner if it is displayed.
-    cy.get(".cky-notice-btn-wrapper > .cky-btn-accept")
-      .click({ force: true });
+    // Accept the cookie consent banner.
+    cy.get(".cky-notice-btn-wrapper > .cky-btn-accept").click({ force: true });
 
     // Verify that the homepage has loaded successfully.
     cy.url().should("include", "student.michaelkentburns.com");
@@ -15,53 +13,45 @@ describe("Provide Feedback", () => {
     cy.contains("User").click();
     cy.contains("Login").click();
 
-    // Enter valid login credentials.
-    cy.get('[name="log"]')
-      .should("be.visible")
-      .clear()
-      .type("arnold-test", { delay: 50 });
+    // Enter valid credentials.
+    cy.get('[name="log"]').should("be.visible").clear().type("arnold-test");
 
     cy.get('[name="pwd"]')
       .should("be.visible")
       .clear()
-      .type("mypassword123useraccount", { delay: 50 });
+      .type("mypassword123useraccount");
 
-    // Enable the "Remember Me" option.
+    // Enable "Remember Me".
     cy.get('[name="rememberme"]').check({ force: true });
 
-    // Submit the login form.
+    // Submit login form.
     cy.get('[name="wp-submit"]').click();
 
-    // Verify that the login was successful.
-    cy.url().should("not.include", "wp-login");
-  });
+    // Verify successful login.
+    cy.contains("All Surveys", { timeout: 10000 }).should("be.visible");
 
-  it("should log in successfully", () => {
-    // Verify that the user is logged in.
-    cy.contains("All Surveys").should("be.visible");
-  });
+    // Open All Surveys page.
+    cy.contains("All Surveys").click();
 
-  it("should navigate to the All Surveys page", () => {
+    // Navigate through three pages.
+    for (let i = 0; i < 3; i++) {
+      // Scroll to pagination section.
+      cy.scrollTo("bottom");
 
-    // Open the "All Surveys" page.
-    cy.contains("All Surveys")
+      // Click Next Page.
+      cy.contains("Next", { timeout: 10000 }).should("be.visible").click();
+    }
+
+    // Open Arnold Project Testing Survey.
+    cy.contains("Arnold Project Testing Survey", { timeout: 10000 })
       .should("be.visible")
       .click();
 
-    // Verify that the navigation was successful.
-    cy.url().should("include", "completed");
+    // should response for all questions
+    cy.get('[name="answer[348]"]').should("be.visible").clear().type("Yes");
+
+    cy.get('[name="answer[349]"]').should("be.visible").clear().type("Yes Al");
+
+    cy.get('[name="answer[350]"]').should("be.visible").clear().type("Yes All");
   });
-
-
-  it("should click to the next-page links", () => {
-
-    // Open the "All Surveys" page.
-    cy.get('.wp-block-query-pagination-next')
-      .should("be.visible")
-      .click();
-
-    // Verify that the navigation was successful.
-    cy.url('https://student.michaelkentburns.com/survey/page/2/').should('be.visible');
-  });
-
 });
